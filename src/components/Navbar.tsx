@@ -1,41 +1,36 @@
 import React from 'react';
-import { Box, Flex, Link, Button, Text } from '@chakra-ui/react';
-import { Link as RouterLink } from 'react-router-dom';
-import { useWeb3 } from '../context/Web3Context';
+import { Box, Flex, Text, Button, Spacer, HStack, Icon } from '@chakra-ui/react';
+import { Link } from 'react-router-dom';
+import { FaGuitar, FaWallet } from 'react-icons/fa';
 
 const Navbar: React.FC = () => {
-  const { account, connectWallet, disconnectWallet } = useWeb3();
-
   return (
-    <Box bg="blue.500" px={4} py={2}>
-      <Flex maxW="container.xl" mx="auto" justify="space-between" align="center">
-        <Flex gap={4}>
-          <Link as={RouterLink} to="/" color="white">
+    <Box
+      bgGradient="linear(to-r, brand.600, brand.900, brand.700)"
+      px={8}
+      py={4}
+      boxShadow="md"
+      borderBottom="6px solid #FFD700"
+    >
+      <Flex align="center">
+        <HStack spacing={3}>
+          <Icon as={FaGuitar} color="yellow.400" boxSize={8} />
+          <Text fontFamily="heading" fontSize="2xl" color="white" fontWeight="bold" letterSpacing={2}>
+            Tirada Ancestral
+          </Text>
+        </HStack>
+        <Spacer />
+        <HStack spacing={6}>
+          <Button as={Link} to="/" variant="ghost" color="white" fontWeight="bold" _hover={{ bg: 'brand.700', color: 'yellow.300' }}>
             Inicio
-          </Link>
-          <Link as={RouterLink} to="/game" color="white">
-            Juego
-          </Link>
-          <Link as={RouterLink} to="/profile" color="white">
-            Perfil
-          </Link>
-        </Flex>
-        <Flex align="center" gap={4}>
-          {account ? (
-            <>
-              <Text color="white">
-                {account.slice(0, 6)}...{account.slice(-4)}
-              </Text>
-              <Button size="sm" onClick={disconnectWallet}>
-                Desconectar
-              </Button>
-            </>
-          ) : (
-            <Button size="sm" onClick={connectWallet}>
-              Conectar Wallet
-            </Button>
-          )}
-        </Flex>
+          </Button>
+          <Button as={Link} to="/game" variant="ghost" color="white" fontWeight="bold" _hover={{ bg: 'brand.700', color: 'yellow.300' }}>
+            Jugar Lotería
+          </Button>
+          <Button as={Link} to="/profile" leftIcon={<FaWallet />} colorScheme="yellow" borderRadius="full" fontWeight="bold">
+            Mi Wallet
+          </Button>
+        </HStack>
       </Flex>
     </Box>
   );
