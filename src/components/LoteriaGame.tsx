@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Grid, Button, Text, VStack, HStack, useToast, Badge, Image } from '@chakra-ui/react';
+import { Box, Grid, Button, Text, VStack, HStack, useToast, Badge, Image as ChakraImage } from '@chakra-ui/react';
 import { keyframes } from '@emotion/react';
 import { useWeb3 } from '../context/Web3Context';
 import { FaCoins } from 'react-icons/fa';
+import frijolitoImg from '../img/Logos/frijolito.png';
+import elGallo from '../img/Cartas/EL_GALLO.jpg';
+import elDiablo from '../img/Cartas/EL_DIABLO.jpg';
+import laDama from '../img/Cartas/LA_DAMA.jpg';
 
 interface Card {
   id: number;
@@ -17,6 +21,21 @@ interface Player {
   tables: number[][];
 }
 
+const cartas = [
+  { nombre: 'El Gallo', imagen: elGallo },
+  { nombre: 'El Diablo', imagen: elDiablo },
+  { nombre: 'La Dama', imagen: laDama },
+  { nombre: 'El Catrín', imagen: undefined },
+  { nombre: 'El Paraguas', imagen: undefined },
+  { nombre: 'La Sirena', imagen: undefined },
+  { nombre: 'La Escalera', imagen: undefined },
+  { nombre: 'La Botella', imagen: undefined },
+  { nombre: 'El Barril', imagen: undefined },
+  { nombre: 'El Árbol', imagen: undefined },
+  { nombre: 'El Melón', imagen: undefined },
+  { nombre: 'El Valiente', imagen: undefined },
+];
+
 const borderAnim = keyframes`
   0% { box-shadow: 0 0 0 0 #FFD700; }
   50% { box-shadow: 0 0 24px 8px #FFD700; }
@@ -24,11 +43,10 @@ const borderAnim = keyframes`
 `;
 
 const LoteriaGame: React.FC = () => {
-  const { account, connectWallet } = useWeb3();
+  const { account, connectWallet, frijolitos } = useWeb3();
   const [gameState, setGameState] = useState<'waiting' | 'playing' | 'finished'>('waiting');
   const [currentCard, setCurrentCard] = useState<Card | null>(null);
   const [player, setPlayer] = useState<Player | null>(null);
-  const [frijolitos, setFrijolitos] = useState<number>(0);
   const [tables, setTables] = useState<number[][]>([]);
   const toast = useToast();
 
@@ -57,24 +75,7 @@ const LoteriaGame: React.FC = () => {
     }
 
     setGameState('playing');
-    setFrijolitos(prev => prev - 10);
     // Aquí se inicializaría la tabla del jugador
-  };
-
-  // Comprar frijolitos
-  const buyFrijolitos = (amount: number) => {
-    if (!account) {
-      toast({
-        title: "Error",
-        description: "Debes conectar tu wallet primero",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
-      return;
-    }
-    // Aquí se implementaría la lógica para comprar frijolitos con criptomonedas
-    setFrijolitos(prev => prev + amount);
   };
 
   // Marcar carta en la tabla
@@ -82,23 +83,6 @@ const LoteriaGame: React.FC = () => {
     if (gameState !== 'playing') return;
     // Aquí se implementaría la lógica para marcar la carta
   };
-
-  // Demo de cartas (puedes reemplazar con tus imágenes reales)
-  const cartasDemo = [
-    { id: 1, name: 'El Gallo', image: '/src/img/Cartas/EL GALLO.jpg', isMarked: false },
-    { id: 2, name: 'El Diablo', image: '/src/img/Cartas/EL DIABLO.png', isMarked: false },
-    { id: 3, name: 'La Dama', image: '/src/img/Cartas/LA DAMA.png', isMarked: false },
-    { id: 4, name: 'El Catrín', image: '', isMarked: false },
-    { id: 5, name: 'El Paraguas', image: '', isMarked: false },
-    { id: 6, name: 'La Sirena', image: '', isMarked: false },
-    { id: 7, name: 'La Escalera', image: '', isMarked: false },
-    { id: 8, name: 'La Botella', image: '', isMarked: false },
-    { id: 9, name: 'El Barril', image: '', isMarked: false },
-    { id: 10, name: 'El Árbol', image: '', isMarked: false },
-    { id: 11, name: 'El Melón', image: '', isMarked: false },
-    { id: 12, name: 'El Valiente', image: '', isMarked: false },
-    // ...agrega el resto de cartas aquí
-  ];
 
   return (
     <Box p={4} bgGradient="linear(to-br, fondo.100, brand.100, fondo.200)" borderRadius="2xl" boxShadow="2xl">
@@ -113,11 +97,8 @@ const LoteriaGame: React.FC = () => {
             <Text fontWeight="bold" color="brand.900">Cuenta: {account}</Text>
           )}
           <Badge colorScheme="yellow" fontSize="1.1em" px={4} py={2} borderRadius="full" boxShadow="md">
-            <HStack><FaCoins /> <span>{frijolitos} Frijolitos</span></HStack>
+            <HStack><img src={frijolitoImg} alt="frijolito" style={{width: 24, height: 24}} /> <span>{frijolitos} Frijolitos</span></HStack>
           </Badge>
-          <Button onClick={() => buyFrijolitos(100)} colorScheme="pink" borderRadius="full" fontWeight="bold">
-            Comprar 100 Frijolitos
-          </Button>
         </HStack>
 
         {/* Tablero de juego */}
@@ -129,9 +110,9 @@ const LoteriaGame: React.FC = () => {
 
         {gameState === 'playing' && (
           <Grid templateColumns="repeat(4, 1fr)" gap={6}>
-            {cartasDemo.map((carta, idx) => (
+            {cartas.map((carta, idx) => (
               <Box
-                key={carta.id}
+                key={carta.nombre}
                 bgGradient="linear(to-br, brand.50, brand.200, fondo.200)"
                 borderRadius="2xl"
                 border="4px solid #FFD700"
@@ -141,15 +122,15 @@ const LoteriaGame: React.FC = () => {
                 transition="transform 0.2s"
                 _hover={{ transform: 'scale(1.08)', boxShadow: '2xl', animation: `${borderAnim} 1s infinite` }}
               >
-                {carta.image ? (
-                  <Image src={carta.image} alt={carta.name} borderRadius="md" boxShadow="md" mx="auto" maxH="120px" />
+                {carta.imagen ? (
+                  <ChakraImage src={carta.imagen} alt={carta.nombre} borderRadius="md" boxShadow="md" mx="auto" maxH="120px" />
                 ) : (
                   <Box bg="gray.200" borderRadius="md" h="120px" display="flex" alignItems="center" justifyContent="center" color="gray.500" fontWeight="bold">
                     Próximamente
                   </Box>
                 )}
                 <Text mt={2} fontWeight="bold" color="brand.500" fontFamily="heading" fontSize="lg">
-                  {carta.name}
+                  {carta.nombre}
                 </Text>
               </Box>
             ))}
@@ -160,7 +141,7 @@ const LoteriaGame: React.FC = () => {
         {currentCard && (
           <Box borderWidth="4px" borderColor="brand.600" borderRadius="2xl" p={4} bg="white" boxShadow="2xl">
             <Text fontSize="2xl" fontWeight="bold" color="brand.900" fontFamily="heading">{currentCard.name}</Text>
-            <Image 
+            <ChakraImage 
               src={currentCard.image} 
               alt={currentCard.name}
               borderRadius="lg"

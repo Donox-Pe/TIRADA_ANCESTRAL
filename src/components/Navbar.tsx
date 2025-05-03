@@ -1,9 +1,10 @@
 import React from 'react';
 import { Box, Flex, Text, Button, Spacer, HStack, Icon } from '@chakra-ui/react';
-import { Link } from 'react-router-dom';
-import { FaGuitar, FaWallet } from 'react-icons/fa';
+import { Link, useNavigate } from 'react-router-dom';
+import { FaGuitar, FaWallet, FaCoins } from 'react-icons/fa';
 
 const Navbar: React.FC = () => {
+  const navigate = useNavigate();
   return (
     <Box
       bgGradient="linear(to-r, brand.600, brand.900, brand.700)"
@@ -26,6 +27,9 @@ const Navbar: React.FC = () => {
           </Button>
           <Button as={Link} to="/game" variant="ghost" color="white" fontWeight="bold" _hover={{ bg: 'brand.700', color: 'yellow.300' }}>
             Jugar Lotería
+          </Button>
+          <Button leftIcon={<FaCoins />} colorScheme="yellow" borderRadius="full" fontWeight="bold" onClick={() => navigate('/comprar-frijolitos')}>
+            Comprar Frijolitos
           </Button>
           <Button as={Link} to="/profile" leftIcon={<FaWallet />} colorScheme="yellow" borderRadius="full" fontWeight="bold">
             Mi Wallet

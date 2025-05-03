@@ -7,6 +7,7 @@ import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Game from './pages/Game';
 import Profile from './pages/Profile';
+import ComprarFrijolitos from './pages/ComprarFrijolitos';
 
 const App: React.FC = () => {
   return (
@@ -18,6 +19,7 @@ const App: React.FC = () => {
             <Route path="/" element={<Home />} />
             <Route path="/game" element={<Game />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/comprar-frijolitos" element={<ComprarFrijolitos />} />
           </Routes>
         </Router>
       </Web3Provider>

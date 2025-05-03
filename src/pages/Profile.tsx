@@ -1,9 +1,10 @@
 import React from 'react';
 import { Box, VStack, Text, SimpleGrid, Stat, StatLabel, StatNumber, Button } from '@chakra-ui/react';
-import { useWeb3 } from '../contexts/Web3Context';
+import { useWeb3 } from '../context/Web3Context';
+import frijolitoImg from '../img/Logos/frijolito.png';
 
 const Profile: React.FC = () => {
-  const { account, balance } = useWeb3();
+  const { account, balance, frijolitos, astrVirtual } = useWeb3();
 
   return (
     <Box>
@@ -11,7 +12,9 @@ const Profile: React.FC = () => {
         <Box p={6} bg="white" borderRadius="lg" boxShadow="md">
           <Text fontSize="2xl" fontWeight="bold">Mi Perfil</Text>
           <Text mt={2}>Wallet: {account}</Text>
-          <Text>Balance: {balance} ASTR</Text>
+          <Text>Balance real: {balance} ASTR</Text>
+          <Text color="brand.verde">Frijolitos: <img src={frijolitoImg} alt="frijolito" style={{width: 20, height: 20, display: 'inline', verticalAlign: 'middle'}} /> {frijolitos}</Text>
+          <Text color="brand.azul">ASTR virtual: {astrVirtual.toFixed(2)}</Text>
         </Box>
 
         <SimpleGrid columns={{ base: 1, md: 3 }} spacing={6}>
@@ -25,7 +28,7 @@ const Profile: React.FC = () => {
           </Stat>
           <Stat p={6} bg="white" borderRadius="lg" boxShadow="md">
             <StatLabel>Frijolitos</StatLabel>
-            <StatNumber>0</StatNumber>
+            <StatNumber><img src={frijolitoImg} alt="frijolito" style={{width: 20, height: 20, display: 'inline', verticalAlign: 'middle'}} /> {frijolitos}</StatNumber>
           </Stat>
         </SimpleGrid>
 
