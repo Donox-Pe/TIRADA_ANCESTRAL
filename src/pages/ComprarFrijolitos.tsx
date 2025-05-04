@@ -3,6 +3,7 @@ import { Box, SimpleGrid, Text, VStack, Badge, Image, Button, HStack, useToast, 
 import { FaCoins, FaCrown, FaGuitar, FaStar, FaFire, FaGift, FaCheckCircle } from 'react-icons/fa';
 import { useWeb3 } from '../context/Web3Context';
 import frijolitoImg from '../img/Logos/frijolito.png';
+import astrImg from '../img/Logos/ASTR.png';
 
 const popoverColors = [
   'brand.verde',
@@ -107,8 +108,8 @@ const ComprarFrijolitos: React.FC = () => {
         <Text fontFamily="heading" fontSize="4xl" color="brand.dorado" textShadow="2px 2px 8px #222">
           ¡Compra tus Frijolitos!
         </Text>
-        <Badge colorScheme="yellow" fontSize="1.2em" px={4} py={2} borderRadius="full" boxShadow="md" bg="brand.dorado" color="brand.negro">
-          Elige tu paquete favorito y paga con ASTR o Sonerium
+        <Badge colorScheme="yellow" fontSize="1.2em" px={4} py={2} borderRadius="full" boxShadow="md" bg="brand.dorado" color="brand.negro" fontWeight="bold">
+          ELIGE TU PAQUETE FAVORITO Y PAGA CON ASTR
         </Badge>
       </VStack>
       <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8} maxW="1100px" mx="auto">
@@ -133,14 +134,11 @@ const ComprarFrijolitos: React.FC = () => {
                 <Text fontSize="lg" mb={2} color="brand.azul">{paq.copy}</Text>
                 <Text fontWeight="bold" fontSize="2xl" color="brand.rojo">{paq.frijolitos} Frijolitos</Text>
                 {paq.bonus && <Badge colorScheme="yellow" fontSize="1em" px={3} py={1} borderRadius="full" bg="brand.dorado" color="brand.negro" mb={2}>{paq.bonus}</Badge>}
-                <HStack justify="center" mt={4}>
-                  <Button leftIcon={<FaCoins />} colorScheme="yellow" borderRadius="full" fontWeight="bold" onClick={() => handleBuy(paq, 'ASTR')}>
+                <VStack justify="center" mt={6} spacing={4}>
+                  <Button leftIcon={<img src={astrImg} alt="ASTR" style={{width: 28, height: 28}} />} colorScheme="yellow" borderRadius="full" fontWeight="bold" px={10} py={6} fontSize="xl" w="100%" maxW="320px" onClick={() => handleBuy(paq, 'ASTR')}>
                     Comprar con ASTR
                   </Button>
-                  <Button leftIcon={<FaCoins />} colorScheme="pink" borderRadius="full" fontWeight="bold" onClick={() => handleBuy(paq, 'Sonerium')}>
-                    Comprar con Sonerium
-                  </Button>
-                </HStack>
+                </VStack>
               </Box>
             </PopoverTrigger>
             <PopoverContent bg="brand.blanco" borderColor={popoverColors[idx % popoverColors.length]} boxShadow="xl" p={4} borderRadius="2xl">

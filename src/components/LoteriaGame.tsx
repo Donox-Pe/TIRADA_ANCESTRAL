@@ -7,6 +7,12 @@ import frijolitoImg from '../img/Logos/frijolito.png';
 import elGallo from '../img/Cartas/EL_GALLO.jpg';
 import elDiablo from '../img/Cartas/EL_DIABLO.jpg';
 import laDama from '../img/Cartas/LA_DAMA.jpg';
+import elBilletero from '../img/Cartas/EL_BILLETERO.jpg';
+import elCriptocharro from '../img/Cartas/EL_CRIPTOCHARRO.jpg';
+import laCybersirena from '../img/Cartas/LA_CYBERSIRENA.jpg';
+import elHacker from '../img/Cartas/EL_HACKER.jpg';
+import elSoldado from '../img/Cartas/EL_SOLDADO.jpg';
+import laReina from '../img/Cartas/LA_REINA.jpg';
 
 interface Card {
   id: number;
@@ -34,6 +40,53 @@ const cartas = [
   { nombre: 'El Árbol', imagen: undefined },
   { nombre: 'El Melón', imagen: undefined },
   { nombre: 'El Valiente', imagen: undefined },
+  { nombre: 'El Gorrito', imagen: undefined },
+  { nombre: 'La Muerte', imagen: undefined },
+  { nombre: 'La Pera', imagen: undefined },
+  { nombre: 'La Bandera', imagen: undefined },
+  { nombre: 'El Bandolón', imagen: undefined },
+  { nombre: 'El Violoncello', imagen: undefined },
+  { nombre: 'La Garza', imagen: undefined },
+  { nombre: 'El Pájaro', imagen: undefined },
+  { nombre: 'La Mano', imagen: undefined },
+  { nombre: 'La Bota', imagen: undefined },
+  { nombre: 'La Luna', imagen: undefined },
+  { nombre: 'El Cotorro', imagen: undefined },
+  { nombre: 'El Borracho', imagen: undefined },
+  { nombre: 'El Negrito', imagen: undefined },
+  { nombre: 'El Corazón', imagen: undefined },
+  { nombre: 'La Sandía', imagen: undefined },
+  { nombre: 'El Tambor', imagen: undefined },
+  { nombre: 'El Camarón', imagen: undefined },
+  { nombre: 'Las Jaras', imagen: undefined },
+  { nombre: 'El Músico', imagen: undefined },
+  { nombre: 'La Araña', imagen: undefined },
+  { nombre: 'El Soldado', imagen: elSoldado },
+  { nombre: 'La Estrella', imagen: undefined },
+  { nombre: 'El Cazo', imagen: undefined },
+  { nombre: 'El Mundo', imagen: undefined },
+  { nombre: 'El Apache', imagen: undefined },
+  { nombre: 'El Nopal', imagen: undefined },
+  { nombre: 'El Alacrán', imagen: undefined },
+  { nombre: 'La Rosa', imagen: undefined },
+  { nombre: 'La Calavera', imagen: undefined },
+  { nombre: 'La Campana', imagen: undefined },
+  { nombre: 'El Cantarito', imagen: undefined },
+  { nombre: 'El Venado', imagen: undefined },
+  { nombre: 'El Sol', imagen: undefined },
+  { nombre: 'La Corona', imagen: undefined },
+  { nombre: 'La Chalupa', imagen: undefined },
+  { nombre: 'El Pino', imagen: undefined },
+  { nombre: 'El Pescado', imagen: undefined },
+  { nombre: 'La Palma', imagen: undefined },
+  { nombre: 'La Maceta', imagen: undefined },
+  { nombre: 'El Arpa', imagen: undefined },
+  { nombre: 'La Rana', imagen: undefined },
+  { nombre: 'El Billetero', imagen: elBilletero },
+  { nombre: 'El Criptocharro', imagen: elCriptocharro },
+  { nombre: 'La Cybersirena', imagen: laCybersirena },
+  { nombre: 'El Hacker', imagen: elHacker },
+  { nombre: 'La Reina', imagen: laReina },
 ];
 
 const borderAnim = keyframes`

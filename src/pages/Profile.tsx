@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, VStack, Text, SimpleGrid, Stat, StatLabel, StatNumber, Button } from '@chakra-ui/react';
 import { useWeb3 } from '../context/Web3Context';
 import frijolitoImg from '../img/Logos/frijolito.png';
+import astrImg from '../img/Logos/ASTR.png';
 
 const Profile: React.FC = () => {
   const { account, balance, frijolitos, astrVirtual } = useWeb3();
@@ -14,7 +15,7 @@ const Profile: React.FC = () => {
           <Text mt={2}>Wallet: {account}</Text>
           <Text>Balance real: {balance} ASTR</Text>
           <Text color="brand.verde">Frijolitos: <img src={frijolitoImg} alt="frijolito" style={{width: 20, height: 20, display: 'inline', verticalAlign: 'middle'}} /> {frijolitos}</Text>
-          <Text color="brand.azul">ASTR virtual: {astrVirtual.toFixed(2)}</Text>
+          <Text color="brand.azul">ASTR virtual: <img src={astrImg} alt="ASTR" style={{width: 20, height: 20, display: 'inline', verticalAlign: 'middle'}} /> {astrVirtual.toFixed(2)}</Text>
         </Box>
 
         <SimpleGrid columns={{ base: 1, md: 3 }} spacing={6}>
