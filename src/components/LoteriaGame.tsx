@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Grid, Button, Text, VStack, HStack, useToast, Badge, Image as ChakraImage } from '@chakra-ui/react';
+import { Box, Grid, Button, Text, VStack, HStack, useToast, Badge, Image as ChakraImage, Input, SimpleGrid, Stat, StatLabel, StatNumber } from '@chakra-ui/react';
 import { keyframes } from '@emotion/react';
 import { useWeb3 } from '../context/Web3Context';
 import { FaCoins } from 'react-icons/fa';
@@ -13,6 +13,7 @@ import laCybersirena from '../img/Cartas/LA_CYBERSIRENA.jpg';
 import elHacker from '../img/Cartas/EL_HACKER.jpg';
 import elSoldado from '../img/Cartas/EL_SOLDADO.jpg';
 import laReina from '../img/Cartas/LA_REINA.jpg';
+import { Link } from 'react-router-dom';
 
 interface Card {
   id: number;
@@ -31,62 +32,12 @@ const cartas = [
   { nombre: 'El Gallo', imagen: elGallo },
   { nombre: 'El Diablo', imagen: elDiablo },
   { nombre: 'La Dama', imagen: laDama },
-  { nombre: 'El Catrín', imagen: undefined },
-  { nombre: 'El Paraguas', imagen: undefined },
-  { nombre: 'La Sirena', imagen: undefined },
-  { nombre: 'La Escalera', imagen: undefined },
-  { nombre: 'La Botella', imagen: undefined },
-  { nombre: 'El Barril', imagen: undefined },
-  { nombre: 'El Árbol', imagen: undefined },
-  { nombre: 'El Melón', imagen: undefined },
-  { nombre: 'El Valiente', imagen: undefined },
-  { nombre: 'El Gorrito', imagen: undefined },
-  { nombre: 'La Muerte', imagen: undefined },
-  { nombre: 'La Pera', imagen: undefined },
-  { nombre: 'La Bandera', imagen: undefined },
-  { nombre: 'El Bandolón', imagen: undefined },
-  { nombre: 'El Violoncello', imagen: undefined },
-  { nombre: 'La Garza', imagen: undefined },
-  { nombre: 'El Pájaro', imagen: undefined },
-  { nombre: 'La Mano', imagen: undefined },
-  { nombre: 'La Bota', imagen: undefined },
-  { nombre: 'La Luna', imagen: undefined },
-  { nombre: 'El Cotorro', imagen: undefined },
-  { nombre: 'El Borracho', imagen: undefined },
-  { nombre: 'El Negrito', imagen: undefined },
-  { nombre: 'El Corazón', imagen: undefined },
-  { nombre: 'La Sandía', imagen: undefined },
-  { nombre: 'El Tambor', imagen: undefined },
-  { nombre: 'El Camarón', imagen: undefined },
-  { nombre: 'Las Jaras', imagen: undefined },
-  { nombre: 'El Músico', imagen: undefined },
-  { nombre: 'La Araña', imagen: undefined },
-  { nombre: 'El Soldado', imagen: elSoldado },
-  { nombre: 'La Estrella', imagen: undefined },
-  { nombre: 'El Cazo', imagen: undefined },
-  { nombre: 'El Mundo', imagen: undefined },
-  { nombre: 'El Apache', imagen: undefined },
-  { nombre: 'El Nopal', imagen: undefined },
-  { nombre: 'El Alacrán', imagen: undefined },
-  { nombre: 'La Rosa', imagen: undefined },
-  { nombre: 'La Calavera', imagen: undefined },
-  { nombre: 'La Campana', imagen: undefined },
-  { nombre: 'El Cantarito', imagen: undefined },
-  { nombre: 'El Venado', imagen: undefined },
-  { nombre: 'El Sol', imagen: undefined },
-  { nombre: 'La Corona', imagen: undefined },
-  { nombre: 'La Chalupa', imagen: undefined },
-  { nombre: 'El Pino', imagen: undefined },
-  { nombre: 'El Pescado', imagen: undefined },
-  { nombre: 'La Palma', imagen: undefined },
-  { nombre: 'La Maceta', imagen: undefined },
-  { nombre: 'El Arpa', imagen: undefined },
-  { nombre: 'La Rana', imagen: undefined },
   { nombre: 'El Billetero', imagen: elBilletero },
   { nombre: 'El Criptocharro', imagen: elCriptocharro },
   { nombre: 'La Cybersirena', imagen: laCybersirena },
   { nombre: 'El Hacker', imagen: elHacker },
-  { nombre: 'La Reina', imagen: laReina },
+  { nombre: 'El Soldado', imagen: elSoldado },
+  { nombre: 'La Reina', imagen: laReina }
 ];
 
 const borderAnim = keyframes`
@@ -96,11 +47,16 @@ const borderAnim = keyframes`
 `;
 
 const LoteriaGame: React.FC = () => {
-  const { account, connectWallet, frijolitos } = useWeb3();
+  const { account, connectWallet, frijolitos, astrVirtual, addFrijolitos, gamesPlayed, gamesWon, updateGameStats, addNFT } = useWeb3();
   const [gameState, setGameState] = useState<'waiting' | 'playing' | 'finished'>('waiting');
   const [currentCard, setCurrentCard] = useState<Card | null>(null);
   const [player, setPlayer] = useState<Player | null>(null);
   const [tables, setTables] = useState<number[][]>([]);
+  const [selectedCard, setSelectedCard] = useState<number | null>(null);
+  const [betAmount, setBetAmount] = useState<number>(100);
+  const [showBetModal, setShowBetModal] = useState<boolean>(false);
+  const [showResultModal, setShowResultModal] = useState<boolean>(false);
+  const [result, setResult] = useState<{ won: boolean; message: string; selectedCard: number; drawnCard: number } | null>(null);
   const toast = useToast();
 
   // Inicializar el juego
@@ -119,7 +75,7 @@ const LoteriaGame: React.FC = () => {
     if (frijolitos < 10) {
       toast({
         title: "Error",
-        description: "No tienes suficientes frijolitos para comprar una tabla",
+        description: "No tienes suficientes frijolitos para jugar",
         status: "error",
         duration: 3000,
         isClosable: true,
@@ -128,13 +84,63 @@ const LoteriaGame: React.FC = () => {
     }
 
     setGameState('playing');
-    // Aquí se inicializaría la tabla del jugador
   };
 
-  // Marcar carta en la tabla
-  const markCard = (cardId: number) => {
+  // Seleccionar carta
+  const selectCard = (index: number) => {
     if (gameState !== 'playing') return;
-    // Aquí se implementaría la lógica para marcar la carta
+    setSelectedCard(index);
+    setShowBetModal(true);
+  };
+
+  // Realizar apuesta
+  const placeBet = () => {
+    if (!selectedCard || betAmount < 100 || betAmount > frijolitos) {
+      toast({
+        title: "Error",
+        description: "Apuesta inválida",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    // Simular sorteo de carta
+    const drawnCard = Math.floor(Math.random() * cartas.length);
+    const won = drawnCard === selectedCard;
+    
+    updateGameStats(won);
+    if (won) {
+      addFrijolitos(betAmount * 2); // Duplicar la apuesta como ganancia
+      
+      // Agregar NFT
+      addNFT({
+        id: Date.now(),
+        name: cartas[selectedCard].nombre,
+        image: cartas[selectedCard].imagen,
+        date: new Date().toLocaleDateString()
+      });
+    }
+
+    setResult({
+      won,
+      message: won 
+        ? "¡Felicidades! ¡Has ganado! 🎉" 
+        : "¡Ay caramba! No fue esta vez. ¡Suerte para la próxima! 😅",
+      selectedCard,
+      drawnCard
+    });
+
+    setShowBetModal(false);
+    setShowResultModal(true);
+  };
+
+  const handlePlayAgain = () => {
+    setShowResultModal(false);
+    setResult(null);
+    setSelectedCard(null);
+    setBetAmount(100);
   };
 
   return (
@@ -154,10 +160,22 @@ const LoteriaGame: React.FC = () => {
           </Badge>
         </HStack>
 
+        {/* Estadísticas */}
+        <SimpleGrid columns={2} spacing={4} w="full">
+          <Stat p={4} bg="white" borderRadius="lg" boxShadow="md">
+            <StatLabel>Partidas Jugadas</StatLabel>
+            <StatNumber>{gamesPlayed}</StatNumber>
+          </Stat>
+          <Stat p={4} bg="white" borderRadius="lg" boxShadow="md">
+            <StatLabel>Partidas Ganadas</StatLabel>
+            <StatNumber>{gamesWon}</StatNumber>
+          </Stat>
+        </SimpleGrid>
+
         {/* Tablero de juego */}
         {gameState === 'waiting' && (
           <Button onClick={startGame} colorScheme="purple" size="lg" borderRadius="full" fontWeight="bold" boxShadow="lg">
-            Iniciar Juego (10 Frijolitos)
+            Iniciar Juego
           </Button>
         )}
 
@@ -168,20 +186,16 @@ const LoteriaGame: React.FC = () => {
                 key={carta.nombre}
                 bgGradient="linear(to-br, brand.50, brand.200, fondo.200)"
                 borderRadius="2xl"
-                border="4px solid #FFD700"
+                border={`4px solid ${selectedCard === idx ? '#FF0000' : '#FFD700'}`}
                 boxShadow="xl"
                 p={2}
                 textAlign="center"
                 transition="transform 0.2s"
                 _hover={{ transform: 'scale(1.08)', boxShadow: '2xl', animation: `${borderAnim} 1s infinite` }}
+                onClick={() => selectCard(idx)}
+                cursor="pointer"
               >
-                {carta.imagen ? (
-                  <ChakraImage src={carta.imagen} alt={carta.nombre} borderRadius="md" boxShadow="md" mx="auto" maxH="120px" />
-                ) : (
-                  <Box bg="gray.200" borderRadius="md" h="120px" display="flex" alignItems="center" justifyContent="center" color="gray.500" fontWeight="bold">
-                    Próximamente
-                  </Box>
-                )}
+                <ChakraImage src={carta.imagen} alt={carta.nombre} borderRadius="md" boxShadow="md" mx="auto" maxH="120px" />
                 <Text mt={2} fontWeight="bold" color="brand.500" fontFamily="heading" fontSize="lg">
                   {carta.nombre}
                 </Text>
@@ -190,28 +204,96 @@ const LoteriaGame: React.FC = () => {
           </Grid>
         )}
 
-        {/* Carta actual */}
-        {currentCard && (
-          <Box borderWidth="4px" borderColor="brand.600" borderRadius="2xl" p={4} bg="white" boxShadow="2xl">
-            <Text fontSize="2xl" fontWeight="bold" color="brand.900" fontFamily="heading">{currentCard.name}</Text>
-            <ChakraImage 
-              src={currentCard.image} 
-              alt={currentCard.name}
-              borderRadius="lg"
-              boxShadow="lg"
-              my={4}
-              maxH="200px"
-              mx="auto"
-            />
+        {/* Modal de apuesta */}
+        {showBetModal && (
+          <Box
+            position="fixed"
+            top="50%"
+            left="50%"
+            transform="translate(-50%, -50%)"
+            bg="white"
+            p={6}
+            borderRadius="xl"
+            boxShadow="2xl"
+            zIndex={1000}
+          >
+            <VStack spacing={4}>
+              <Text fontSize="xl" fontWeight="bold">Apostar por {cartas[selectedCard!].nombre}</Text>
+              <Text>Frijolitos disponibles: {frijolitos}</Text>
+              <HStack>
+                <Button onClick={() => setBetAmount(Math.max(100, betAmount - 100))}>-100</Button>
+                <Input
+                  type="number"
+                  value={betAmount}
+                  onChange={(e) => setBetAmount(Number(e.target.value))}
+                  min={100}
+                  max={frijolitos}
+                  width="100px"
+                  textAlign="center"
+                />
+                <Button onClick={() => setBetAmount(Math.min(frijolitos, betAmount + 100))}>+100</Button>
+              </HStack>
+              <HStack spacing={4}>
+                <Button onClick={placeBet} colorScheme="green">Apostar</Button>
+                <Button onClick={() => setShowBetModal(false)} colorScheme="red">Cancelar</Button>
+              </HStack>
+            </VStack>
+          </Box>
+        )}
+
+        {/* Modal de resultado */}
+        {showResultModal && result && (
+          <Box
+            position="fixed"
+            top="50%"
+            left="50%"
+            transform="translate(-50%, -50%)"
+            bg="white"
+            p={6}
+            borderRadius="xl"
+            boxShadow="2xl"
+            zIndex={1000}
+          >
+            <VStack spacing={4}>
+              <Text fontSize="2xl" fontWeight="bold" color={result.won ? "green.500" : "red.500"}>
+                {result.message}
+              </Text>
+              
+              <HStack spacing={8}>
+                <VStack>
+                  <Text fontWeight="bold">Tu elección:</Text>
+                  <ChakraImage src={cartas[result.selectedCard].imagen} alt={cartas[result.selectedCard].nombre} maxH="120px" />
+                  <Text>{cartas[result.selectedCard].nombre}</Text>
+                </VStack>
+                
+                <VStack>
+                  <Text fontWeight="bold">Carta sorteada:</Text>
+                  <ChakraImage src={cartas[result.drawnCard].imagen} alt={cartas[result.drawnCard].nombre} maxH="120px" />
+                  <Text>{cartas[result.drawnCard].nombre}</Text>
+                </VStack>
+              </HStack>
+
+              <Text fontSize="lg">
+                Apuesta: {betAmount} frijolitos ({betAmount * 0.05} ASTR)
+              </Text>
+
+              {result.won && (
+                <Text fontSize="lg" color="green.500" fontWeight="bold">
+                  ¡Ganaste {betAmount * 2} frijolitos! ({betAmount * 0.1} ASTR)
+                </Text>
+              )}
+
+              <HStack spacing={4}>
+                <Button onClick={handlePlayAgain} colorScheme="green">Volver a Apostar</Button>
+                <Button as={Link} to="/profile" colorScheme="blue">Ir a Mi Wallet</Button>
+              </HStack>
+            </VStack>
           </Box>
         )}
 
         {/* Controles del juego */}
         {gameState === 'playing' && (
           <HStack spacing={4}>
-            <Button onClick={() => markCard(0)} colorScheme="yellow" borderRadius="full" fontWeight="bold">
-              Marcar Carta
-            </Button>
             <Button onClick={() => setGameState('finished')} colorScheme="red" borderRadius="full" fontWeight="bold">
               Terminar Juego
             </Button>
